@@ -65,7 +65,7 @@ const Home: NextPage<IPageProps> = ({}) => {
         // Entrance animation - slide in from left
         const progress = elapsed / duration;
         const easeIn = Math.pow(progress, 3); // Cubic ease-in
-        globeGroup.position.x = -5 + (5 * easeIn);
+        globeGroup.position.x = -3.7 + (3.7 * easeIn); // Start closer to center
         globeGroup.rotation.y = Math.PI / 4 + (Math.PI * 2 * easeIn);
       } else {
         // Continuous rotation
@@ -117,13 +117,15 @@ const Home: NextPage<IPageProps> = ({}) => {
       
       {/* 3D Globe Canvas */}
       <div ref={mountRef} className={styles.globeContainer} />
-      
       {/* Content Overlay */}
       <div className={styles.contentOverlay}>
-        <div className={styles.heroContainer}>
-          <div className={styles.customFontText}>
-              <h2 className={styles.customFontTextHeader}>Kevin Reed</h2>
-              <p className={styles.customFontTextSubtitle}>Developer • Designer • Creator</p>
+        <div className={styles.heroFrame}>
+        <div className={styles.globeMask}/>
+          <div className={styles.heroContainer}>
+            <div className={styles.customFontText}>
+                <h2 className={styles.customFontTextHeader}>Kevin Reed</h2>
+                <p className={styles.customFontTextSubtitle}>Developer • Designer • Creator</p>
+            </div>
           </div>
         </div>
       </div>
