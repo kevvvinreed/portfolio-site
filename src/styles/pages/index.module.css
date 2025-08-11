@@ -1,37 +1,213 @@
-.container {
-  position: relative; 
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-
-  background: var(--primary);
-}
-
-.containerOverlay {
+/* Globe Container */
+.globeContainer {
   position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: var(--primary);
-  opacity: 0.6;
-} 
-
-.bodyContainer {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  padding-top: 81px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
 }
 
-.parallaxModal {
-  width: 600px;
-  height: 400px;
-  background-color: var(--primary-text);
-  border: 1px solid var(--primary);
+/* Content Overlay */
+.contentOverlay {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+/* Hero Section */
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.gradient {
+  background: linear-gradient(135deg, #00ffff 0%, #0080ff 50%, #8000ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #cccccc;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+.description {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: #aaaaaa;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Work Directory */
+.workDirectory {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.projectCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.projectCard:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 255, 255, 0.1);
+}
+
+.projectCard h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #00ffff;
+  font-weight: 600;
+}
+
+.projectCard p {
+  color: #cccccc;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.tech {
+  display: inline-block;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contentOverlay {
+    padding: 1rem;
+  }
+  
+  .hero {
+    margin-bottom: 3rem;
+  }
+  
+  .projectGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .projectCard {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .description {
+    font-size: 1rem;
+  }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero, .workDirectory {
+  animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+.projectCard {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.projectCard:nth-child(1) { animation-delay: 0.8s; }
+.projectCard:nth-child(2) { animation-delay: 1s; }
+.projectCard:nth-child(3) { animation-delay: 1.2s; }
+
+/* Custom Font Text */
+.customFontText {
+  font-family: 'Gunmetal', sans-serif;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.customFontTextHeader {
+  font-size: 10rem;
+  text-transform: uppercase;
+  color: var(--primary-text);
+}
+
+.customFontTextSubtitle {
+  font-size: 2rem;
+  color: var(--secondary-text);
+}
+
+.heroContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 54vw;
+  height: 30.375vw;
+
+  border: 1px solid var(--primary-text);
+  background: rgb(0, 0, 0, 0.2);
 }
