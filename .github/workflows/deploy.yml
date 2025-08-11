@@ -1,0 +1,63 @@
+name: cloudrun-deploy
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - '!v*.*.*-dev'
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      # Configure Docker with Artifact Registry host
+      - name: Configure Artifact Registry Docker auth
+        run: |
+          LOCATION=us-east4
+          gcloud auth configure-docker ${LOCATION}-docker.pkg.dev
+
+      # Build the Docker image and push to Artifact Registry
+      - name: Build & Publish (Artifact Registry)
+        run: |
+          PROJECT=${{ secrets.GCP_PROJECT }}
+          APP=${{ secrets.GCP_APPLICATION }}
+          LOCATION=us-east4
+          AR_HOST=${LOCATION}-docker.pkg.dev
+          REPO=cloud-run
+
+          gcloud config set project $PROJECT
+          # Ensure repository exists (no-op if it already does)
+          gcloud artifacts repositories create $REPO \
+            --repository-format=docker \
+            --location=$LOCATION \
+            --description="Cloud Run images" || true
+
+          IMAGE_URI=$AR_HOST/$PROJECT/$REPO/$APP:latest
+          gcloud builds submit --timeout=1200s --tag $IMAGE_URI
+          gcloud config set run/region $LOCATION
+
+      # Deploy the Docker image to Cloud Run
+      - name: Deploy
+        run: |
+          PROJECT=${{ secrets.GCP_PROJECT }}
+          APP=${{ secrets.GCP_APPLICATION }}
+          LOCATION=us-east4
+          AR_HOST=${LOCATION}-docker.pkg.dev
+          REPO=cloud-run
+          IMAGE_URI=$AR_HOST/$PROJECT/$REPO/$APP:latest
+
+          gcloud run deploy $APP --image $IMAGE_URI \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 1024M \
+            --cpu 2
