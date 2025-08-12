@@ -9,8 +9,18 @@ const Home: NextPage<IPageProps> = ({}) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const portfolioContainerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<THREE.Group | null>(null);
   const animationIdRef = useRef<number | null>(null);
+
+  const portfolioCards = [
+    {
+      title: 'observe.finance',
+      description: 'A widget based app for tracking and analyzing financial data',
+      image: '/thumbnails/observe-finance.png',
+      link: 'https://observe.finance'
+    }
+  ]
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -48,9 +58,6 @@ const Home: NextPage<IPageProps> = ({}) => {
     globeGroup.add(grid);
 
 
-    // Initial position (off-screen)
-    // globeGroup.position.x = -5;
-    // globeGroup.rotation.y = Math.PI / 4;
     scene.add(globeGroup);
     globeRef.current = globeGroup;
 
@@ -65,7 +72,7 @@ const Home: NextPage<IPageProps> = ({}) => {
         // Entrance animation - slide in from left
         const progress = elapsed / duration;
         const easeIn = Math.pow(progress, 3); // Cubic ease-in
-        globeGroup.position.x = -3.7 + (3.7 * easeIn); // Start closer to center
+        globeGroup.position.x = -3.65 + (3.7 * easeIn); // Start closer to center
         globeGroup.rotation.y = Math.PI / 4 + (Math.PI * 2 * easeIn);
       } else {
         // Continuous rotation
@@ -102,8 +109,8 @@ const Home: NextPage<IPageProps> = ({}) => {
   return (
     <>
       <Head>
-        <title>Kevin Reed - Portfolio | shipitkev.dev</title>
-        <meta name="description" content="Kevin Reed's portfolio and work directory" />
+        <title>Gallery | shipitkev.dev</title>
+        <meta name="description" content="Portfolio and work directory" />
         <link rel="icon" href="/favicon.ico" />
         <style jsx global>{`
           @font-face {
@@ -118,14 +125,46 @@ const Home: NextPage<IPageProps> = ({}) => {
       {/* 3D Globe Canvas */}
       <div ref={mountRef} className={styles.globeContainer} />
       {/* Content Overlay */}
-      <div className={styles.contentOverlay}>
-        <div className={styles.heroFrame}>
-        <div className={styles.globeMask}/>
+      <div className={styles.contentContainer}>
+        {/* Hero Section */}
+        <div className={styles.sectionContainer}>
+          <div className={styles.heroFrame}>
+          <div className={styles.globeMaskLeft}/> <div className={styles.globeMaskTop}/> <div className={styles.globeMaskBottom}/> <div className={styles.globeMaskRight}/>
           <div className={styles.heroContainer}>
             <div className={styles.customFontText}>
-                <h2 className={styles.customFontTextHeader}>Kevin Reed</h2>
-                <p className={styles.customFontTextSubtitle}>Developer • Designer • Creator</p>
+                <h2 className={styles.customFontTextHeader}>Ship it Kev</h2>
+                <p className={styles.customFontTextSubtitle}>Think • Create • Repeat</p>
+                <p 
+                  onClick={() => {
+                    if (portfolioContainerRef.current) {
+                      portfolioContainerRef.current.scrollIntoView({
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                  className={styles.heroBottomText}>
+                  <span>›</span> Explore <span>‹</span>
+                </p>
             </div>
+          </div>
+          </div>
+        </div>
+        {/* Examples of work section */}
+        <div ref={portfolioContainerRef} className={styles.sectionContainer}>
+          <div className={styles.portfolioContainer}>
+            {/* {portfolioCards.map((card) => {
+              return (
+                
+                <div className={styles.displayItemContainer} onClick={() => {
+                  window.open(card.link, '_blank');
+                }}>
+                  <div className={styles.displayItemHeader}>
+                    <h3>{card.title}</h3>
+                  </div>
+                  <div className={styles.displayItemImage} style={{ backgroundImage: `url(${card.image})` }}/>
+                </div>
+              )
+            })} */}
           </div>
         </div>
       </div>

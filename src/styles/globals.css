@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Condensed&display=swap');
 
+
+@font-face {
+  font-family: 'Druk';
+  src: url('/druk.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 [data-theme='light'] {
   --primary: #f4fffd;
   --secondary: #ed254e;
@@ -32,14 +40,12 @@ html {
   font-size: 62.5%;
   overflow-x: hidden;
   position: fixed;
-  overflow: hidden;
 }
 
 body {
   font-size: 1.6rem;
   overflow-x: hidden;
   position: fixed;
-  overflow: hidden;
 }
 
 a {

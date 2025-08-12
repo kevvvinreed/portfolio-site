@@ -10,16 +10,28 @@
 }
 
 /* Content Overlay */
-.contentOverlay {
+.contentContainer {
   position: relative;
   z-index: 2;
   min-height: 100vh;
-  padding: 2rem;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  overflow-y: scroll;
+}
+
+.sectionContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 /* Hero Section */
@@ -126,10 +138,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .contentOverlay {
-    padding: 1rem;
-  }
-  
   .hero {
     margin-bottom: 3rem;
   }
@@ -183,50 +191,43 @@
 .projectCard:nth-child(3) { animation-delay: 1.2s; }
 
 /* Custom Font Text */
-.customFontText {
-  font-family: 'Gunmetal', sans-serif;
-  margin-top: 2rem;
-  text-align: center;
 
-  user-select: none;
-}
-
-.customFontTextHeader {
-  font-size: 10rem;
-  text-transform: uppercase;
-  color: var(--primary-text);
-  animation: snapIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  animation-delay: 0s; /* Start after globe animation */
-  transform: translateY(50px);
-  opacity: 0;
-
-  text-shadow: 0 0 5px var(--primary-text);
-}
-
-.customFontTextSubtitle {
-  font-size: 2rem;
-  color: var(--secondary-text);
-  animation: snapIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  animation-delay: 0.6s; /* Start after header animation completes */
-  transform: translateY(50px);
-  opacity: 0;
-
-  text-shadow: 0 0 5px var(--secondary-text);
-}
 .heroFrame {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-
-  margin-left: -46vw;
+  position: relative;
 }
-.globeMask {
-  width: calc(100vw - 54vw);
-  height: 60vh;
-  background: var(--primary);
 
+.globeMaskTop {
+  top: 0;
+  left: 0;
+}
+.globeMaskBottom {
+  bottom: 0;
+  left: 0;
+}
+
+.globeMaskTop, .globeMaskBottom {
+  position: absolute;
+  width: 100vw;
+  height: calc((100vh - 30.375vw) / 2);  
+  background: var(--primary);
+}
+
+.globeMaskLeft {
+  left: 0;
+}
+.globeMaskRight {
+  right: 0;
+}
+.globeMaskLeft, .globeMaskRight {
+  position: absolute;
+  width: 23vw;
+  height: 100vh;
+  background: var(--primary);
 }
 
 @keyframes snapIn {
@@ -250,7 +251,122 @@
   justify-content: center;
   width: 54vw;
   height: 30.375vw;
-
+  position: relative;
   border: 1px solid var(--primary-text);
   background: rgb(0, 0, 0, 0.2);
+}
+
+.customFontText {
+  font-family: 'Gunmetal', sans-serif;
+  text-align: center;
+
+  user-select: none;
+}
+
+.customFontTextHeader {
+  font-size: 10rem;
+  text-transform: uppercase;
+  color: var(--primary-text);
+  animation: snapIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  transform: translateY(50px);
+  opacity: 0;
+
+  text-shadow: 0 0 5px var(--primary-text);
+}
+
+.customFontTextSubtitle {
+  font-size: 2rem;
+  color: var(--secondary-text);
+  animation: snapIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation-delay: 0.6s;
+  transform: translateY(50px);
+  opacity: 0;
+
+  text-shadow: 0 0 5px var(--secondary-text);
+}
+
+.heroBottomText {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+
+  text-align: center;
+  font-size: 2rem;
+  color: var(--secondary-text);
+
+  opacity: 0;
+  text-shadow: 0 0 5px var(--primary-text);
+
+  animation: snapInHorrizontal 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation-delay: 3s; 
+  transform: translateX(50px);
+}
+
+.heroBottomText span {
+  opacity: 0;
+  animation: fadeIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation-delay: 4s; 
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.heroBottomText:hover {
+  cursor: pointer;
+  color: var(--tertiary);
+}
+
+@keyframes snapInHorrizontal {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  10% {
+    opactiy: 1;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+/* Begin Section 2 */
+.portfolioContainer {
+  width: 100vw;
+  height: 100vh;
+  background: var(--primary);
+}
+
+.displayItemContainer {
+  width: 40vw;
+  height: calc(22.5vw + 20px);
+
+  border: 1px solid var(--primary-text);
+  cursor: pointer;
+}
+
+.displayItemImage {
+  width: 100%;
+  height: calc(100% - 30px);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.displayItemHeader {
+  font-family: 'Gunmetal', sans-serif;
+  font-size: 1.5rem;
+  padding-left: 10px;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
