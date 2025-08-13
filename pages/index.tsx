@@ -12,6 +12,7 @@ const Home: NextPage<IPageProps> = ({}) => {
   const portfolioContainerRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<THREE.Group | null>(null);
   const animationIdRef = useRef<number | null>(null);
+  const contentContainerRef = useRef<HTMLDivElement>(null);
 
   const portfolioCards = [
     {
@@ -19,7 +20,19 @@ const Home: NextPage<IPageProps> = ({}) => {
       description: 'A widget based app for tracking and analyzing financial data',
       image: '/thumbnails/observe-finance.png',
       link: 'https://observe.finance'
-    }
+    },
+    {
+      title: 'observe.finance2',
+      description: 'A widget based app for tracking and analyzing financial data',
+      image: '/thumbnails/observe-finance.png',
+      link: 'https://observe.finance'
+    },
+    {
+      title: 'observe.finance3',
+      description: 'A widget based app for tracking and analyzing financial data',
+      image: '/thumbnails/observe-finance.png',
+      link: 'https://observe.finance'
+    },
   ]
 
   useEffect(() => {
@@ -91,11 +104,48 @@ const Home: NextPage<IPageProps> = ({}) => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
+
+    const handleScroll = () => {
+      if (contentContainerRef.current) {
+        const rect = contentContainerRef.current.getBoundingClientRect();
+        console.log('contentContainer top Y:', rect.top);
+        
+        // Fade in portfolio cards based on scroll position
+        portfolioCards.forEach((_, index) => {
+          const cardElement = document.getElementById(`portfolio-card-${index}`);
+          if (cardElement) {
+            const cardRect = cardElement.getBoundingClientRect();
+            const viewportCenter = window.innerHeight / 2;
+            
+            // Fade in when card reaches center of viewport
+            if (cardRect.top <= viewportCenter) {
+              cardElement.classList.add(styles.fadeInUpClass);
+              cardElement.classList.remove(styles.fadeOutDownClass);
+            } else {
+              // Start with offset and fade out
+              if ((index + 1) % 2 === 0) {
+                cardElement.classList.add(styles.fadeOutDownClass);
+                cardElement.classList.remove(styles.fadeInUpClass);
+              } else {
+                cardElement.classList.add(styles.fadeOutDownClass);
+                cardElement.classList.remove(styles.fadeInUpClass);
+              }
+            }
+          }
+        });
+      }
+    };
+
+    // Add scroll listener to the contentContainer
+    if (contentContainerRef.current) {
+      contentContainerRef.current.addEventListener('wheel', handleScroll);
+    }
     window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('wheel', handleScroll);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
@@ -125,7 +175,7 @@ const Home: NextPage<IPageProps> = ({}) => {
       {/* 3D Globe Canvas */}
       <div ref={mountRef} className={styles.globeContainer} />
       {/* Content Overlay */}
-      <div className={styles.contentContainer}>
+      <div ref={contentContainerRef} className={styles.contentContainer}>
         {/* Hero Section */}
         <div className={styles.sectionContainer}>
           <div className={styles.heroFrame}>
@@ -152,20 +202,27 @@ const Home: NextPage<IPageProps> = ({}) => {
         {/* Examples of work section */}
         <div ref={portfolioContainerRef} className={styles.sectionContainer}>
           <div className={styles.portfolioContainer}>
-            {/* {portfolioCards.map((card) => {
+            {portfolioCards.map((card, index) => {
               return (
-                
-                <div className={styles.displayItemContainer} onClick={() => {
-                  window.open(card.link, '_blank');
-                }}>
+                <div 
+                  id={'portfolio-card-' + index}
+                  key={card.title} 
+                  className={`${styles.displayItemContainer} ${(index + 1) % 2 === 0 ? styles.displayItemContainerEven : styles.displayItemContainerOdd}`}
+                  onClick={() => {
+                    window.open(card.link, '_blank');
+                  }}
+                >
                   <div className={styles.displayItemHeader}>
                     <h3>{card.title}</h3>
                   </div>
                   <div className={styles.displayItemImage} style={{ backgroundImage: `url(${card.image})` }}/>
                 </div>
               )
-            })} */}
+            })}
           </div>
+        </div>
+        <div className={styles.sectionContainer}>
+          <div className={styles.contactContainer}></div>
         </div>
       </div>
     </>

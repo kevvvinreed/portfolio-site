@@ -254,6 +254,8 @@
   position: relative;
   border: 1px solid var(--primary-text);
   background: rgb(0, 0, 0, 0.2);
+
+  animation: fadeIn 0.5s ease-out 0.5s both;
 }
 
 .customFontText {
@@ -342,6 +344,12 @@
   width: 100vw;
   height: 100vh;
   background: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 50px;
 }
 
 .displayItemContainer {
@@ -350,7 +358,20 @@
 
   border: 1px solid var(--primary-text);
   cursor: pointer;
+
+  opacity: 0;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translateY(-50px);
 }
+
+.displayItemContainerEven {
+  margin-left: 20vw;
+}
+
+.displayItemContainerOdd {
+  margin-left: -20vw;
+}
+
 
 .displayItemImage {
   width: 100%;
@@ -369,4 +390,22 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.fadeOutDownClass {
+  opacity: 0;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translateY(50px);
+}
+
+.fadeInUpClass {
+  opacity: 1;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translateY(0px);
+}
+
+.contactContainer {
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
 }
