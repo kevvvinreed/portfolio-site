@@ -35,6 +35,42 @@ const Home: NextPage<IPageProps> = ({}) => {
     },
   ]
 
+  const handleScroll = () => {
+    if (contentContainerRef.current) {
+      const rect = contentContainerRef.current.getBoundingClientRect();
+      
+      // Fade in portfolio cards based on scroll position
+      portfolioCards.forEach((_, index) => {
+        const cardElement = document.getElementById(`portfolio-card-${index}`);
+        if (cardElement) {
+          const cardRect = cardElement.getBoundingClientRect();
+
+          const fadeInThreshold = window.innerHeight / 1.2;
+          const fadeOutThreshold = window.innerHeight - (window.innerHeight / 1.2);
+
+          console.log({fadeInThreshold, fadeOutThreshold})
+          
+          // Fade in when card reaches center of viewport
+          if (cardRect.top <= fadeInThreshold && cardRect.top >= fadeOutThreshold) {
+            cardElement.classList.add(styles.fadeInUpClass);
+            cardElement.classList.remove(styles.fadeOutUpClass);
+          }
+          
+          if (cardRect.top <= fadeOutThreshold) {
+            // Start with offset and fade out
+            if ((index + 1) % 2 === 0) {
+              cardElement.classList.add(styles.fadeOutUpClass);
+              cardElement.classList.remove(styles.fadeInUpClass);
+            } else {
+              cardElement.classList.add(styles.fadeOutUpClass);
+              cardElement.classList.remove(styles.fadeInUpClass);
+            }
+          }
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     if (!mountRef.current) return;
 
@@ -60,7 +96,8 @@ const Home: NextPage<IPageProps> = ({}) => {
 
     // Create wireframe globe
     const globeGroup = new THREE.Group();
-    const gridGeometry = new THREE.SphereGeometry(0.70, 12, 12);
+    const globeSize = window.innerWidth > 520 ? 0.7 : 0.45;
+    const gridGeometry = new THREE.SphereGeometry(globeSize, 12, 12);
     const gridMaterial = new THREE.MeshBasicMaterial({
       color: 0x25edc4,
       wireframe: true,
@@ -102,50 +139,38 @@ const Home: NextPage<IPageProps> = ({}) => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-
-
-    const handleScroll = () => {
-      if (contentContainerRef.current) {
-        const rect = contentContainerRef.current.getBoundingClientRect();
-        console.log('contentContainer top Y:', rect.top);
+      
+      // Update globe size on resize
+      if (globeRef.current) {
+        const newGlobeSize = window.innerWidth > 520 ? 0.7 : 0.45;
+        const newGridGeometry = new THREE.SphereGeometry(newGlobeSize, 12, 12);
         
-        // Fade in portfolio cards based on scroll position
-        portfolioCards.forEach((_, index) => {
-          const cardElement = document.getElementById(`portfolio-card-${index}`);
-          if (cardElement) {
-            const cardRect = cardElement.getBoundingClientRect();
-            const viewportCenter = window.innerHeight / 2;
-            
-            // Fade in when card reaches center of viewport
-            if (cardRect.top <= viewportCenter) {
-              cardElement.classList.add(styles.fadeInUpClass);
-              cardElement.classList.remove(styles.fadeOutDownClass);
-            } else {
-              // Start with offset and fade out
-              if ((index + 1) % 2 === 0) {
-                cardElement.classList.add(styles.fadeOutDownClass);
-                cardElement.classList.remove(styles.fadeInUpClass);
-              } else {
-                cardElement.classList.add(styles.fadeOutDownClass);
-                cardElement.classList.remove(styles.fadeInUpClass);
-              }
-            }
-          }
-        });
+        // Remove old geometry and add new one
+        if (globeRef.current.children[0]) {
+          const oldMesh = globeRef.current.children[0] as THREE.Mesh;
+          oldMesh.geometry.dispose();
+          oldMesh.geometry = newGridGeometry;
+        }
       }
     };
+
+
+
 
     // Add scroll listener to the contentContainer
     if (contentContainerRef.current) {
       contentContainerRef.current.addEventListener('wheel', handleScroll);
+      contentContainerRef.current.addEventListener('scroll', handleScroll);
     }
     window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('wheel', handleScroll);
+      if (contentContainerRef.current) {
+        contentContainerRef.current.removeEventListener('wheel', handleScroll);
+        contentContainerRef.current.removeEventListener('scroll', handleScroll);
+      }
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
@@ -172,6 +197,9 @@ const Home: NextPage<IPageProps> = ({}) => {
         `}</style>
       </Head>
       
+      <div className={styles.guideTop}></div>
+      <div className={styles.guideBottom}></div>
+    
       {/* 3D Globe Canvas */}
       <div ref={mountRef} className={styles.globeContainer} />
       {/* Content Overlay */}
@@ -190,6 +218,13 @@ const Home: NextPage<IPageProps> = ({}) => {
                       portfolioContainerRef.current.scrollIntoView({
                         behavior: 'smooth'
                       });
+                      const triggerAnimation = async () => {
+                        for (let i = 0; i < 15; i++) {
+                          handleScroll();
+                          await new Promise(r => setTimeout(r, 100));
+                        }
+                      }
+                      triggerAnimation();
                     }
                   }}
                   className={styles.heroBottomText}>

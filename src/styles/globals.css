@@ -9,12 +9,12 @@
 }
 
 [data-theme='light'] {
-  --primary: #f4fffd;
+  --primary: #0D0D0D;
   --secondary: #ed254e;
   --tertiary: #25edc4;
-  --primary-text: #000;
+  --primary-text: #fff;
   --secondary-text: #000;
-  --secondary-text: #000; 
+  --secondary-text: #ccc; 
 }
 
 [data-theme='dark'] {
