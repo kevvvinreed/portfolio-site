@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import styles from "../src/styles/pages/index.module.css";
 import { IPageProps } from "./_app";
@@ -22,54 +22,84 @@ const Home: NextPage<IPageProps> = ({}) => {
       link: 'https://observe.finance'
     },
     {
-      title: 'observe.finance2',
+      title: 'COMING SOON',
       description: 'A widget based app for tracking and analyzing financial data',
-      image: '/thumbnails/observe-finance.png',
-      link: 'https://observe.finance'
+      image: '',
+      link: ''
     },
     {
-      title: 'observe.finance3',
+      title: 'COMING SOON',
       description: 'A widget based app for tracking and analyzing financial data',
-      image: '/thumbnails/observe-finance.png',
-      link: 'https://observe.finance'
+      image: '',
+      link: ''
     },
   ]
 
-  const handleScroll = () => {
-    if (contentContainerRef.current) {
-      const rect = contentContainerRef.current.getBoundingClientRect();
-      
-      // Fade in portfolio cards based on scroll position
+  const [topThreshold, setTopThreshold] = useState(0);
+  const [bottomThreshold, setBottomThreshold] = useState(0);
+  
+  // Use refs to always access current values
+  const topThresholdRef = useRef(0);
+  const bottomThresholdRef = useRef(0);
+
+  useEffect(() => {
+    const updateThresholds = () => {
+      const bottom = window.innerHeight / 1.1;
+      const top = window.innerHeight - (window.innerHeight / 1.1);
+
+      setTopThreshold(top);
+      setBottomThreshold(bottom);
+      topThresholdRef.current = top;
+      bottomThresholdRef.current = bottom;
+    };
+
+    updateThresholds();    
+
+    window.addEventListener('resize', updateThresholds);
+    
+    return () => {
+      window.removeEventListener('resize', updateThresholds);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log({topThreshold, bottomThreshold})
+  }, [topThreshold, bottomThreshold])
+
+  const handleScroll = useCallback(() => {
+    if (contentContainerRef.current) {      
       portfolioCards.forEach((_, index) => {
         const cardElement = document.getElementById(`portfolio-card-${index}`);
         if (cardElement) {
           const cardRect = cardElement.getBoundingClientRect();
 
-          const fadeInThreshold = window.innerHeight / 1.2;
-          const fadeOutThreshold = window.innerHeight - (window.innerHeight / 1.2);
+          let debugState = {fadeIn: 0, fadeOut: 0}
 
-          console.log({fadeInThreshold, fadeOutThreshold})
-          
-          // Fade in when card reaches center of viewport
-          if (cardRect.top <= fadeInThreshold && cardRect.top >= fadeOutThreshold) {
-            cardElement.classList.add(styles.fadeInUpClass);
-            cardElement.classList.remove(styles.fadeOutUpClass);
-          }
-          
-          if (cardRect.top <= fadeOutThreshold) {
-            // Start with offset and fade out
-            if ((index + 1) % 2 === 0) {
-              cardElement.classList.add(styles.fadeOutUpClass);
-              cardElement.classList.remove(styles.fadeInUpClass);
+          // Fade out
+          if (cardRect.top <= topThresholdRef.current || cardRect.top >= bottomThresholdRef.current) {
+            if (index % 2 === 0) {
+              cardElement.classList.add(styles.fadeOutLeftClass);
+              cardElement.classList.remove(styles.fadeInLeftClass);
             } else {
-              cardElement.classList.add(styles.fadeOutUpClass);
-              cardElement.classList.remove(styles.fadeInUpClass);
+              cardElement.classList.add(styles.fadeOutRightClass);
+              cardElement.classList.remove(styles.fadeInRightClass);
+            }
+          } 
+
+          // Fade in
+          if (cardRect.top >= topThresholdRef.current && cardRect.top <= bottomThresholdRef.current) {
+            if (index % 2 === 0) {
+              cardElement.classList.add(styles.fadeInLeftClass);
+              cardElement.classList.remove(styles.fadeOutLeftClass);
+            } else {
+              cardElement.classList.add(styles.fadeInRightClass);
+              cardElement.classList.remove(styles.fadeOutRightClass);
             }
           }
         }
       });
     }
-  };
+  }, [topThreshold, bottomThreshold]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -152,10 +182,11 @@ const Home: NextPage<IPageProps> = ({}) => {
           oldMesh.geometry = newGridGeometry;
         }
       }
+      
+      // Update thresholds on resize
+      setTopThreshold(window.innerHeight / 1.2);
+      setBottomThreshold(window.innerHeight - (window.innerHeight / 1.2));
     };
-
-
-
 
     // Add scroll listener to the contentContainer
     if (contentContainerRef.current) {
@@ -197,8 +228,8 @@ const Home: NextPage<IPageProps> = ({}) => {
         `}</style>
       </Head>
       
-      <div className={styles.guideTop}></div>
-      <div className={styles.guideBottom}></div>
+      {/* <div className={styles.guideTop} style={{top: topThreshold}}></div>
+      <div className={styles.guideBottom} style={{top: bottomThreshold}}></div> */}
     
       {/* 3D Globe Canvas */}
       <div ref={mountRef} className={styles.globeContainer} />

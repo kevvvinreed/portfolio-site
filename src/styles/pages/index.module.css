@@ -166,20 +166,47 @@
   }
 }
 
-/* Animation Classes */
-@keyframes fadeInUp {
+@keyframes fadeInLeft {
   from {
-    opacity: 0;
-    transform: translateY(30px);
+    transform: translateX(-50px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
+  }
+}
+@keyframes fadeInRight {
+  from {
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+}
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(50px);
   }
 }
 
 .hero, .workDirectory {
-  animation: fadeInUp 1s ease-out 0.5s both;
+  animation: fadeInLeft 1s ease-out 0.5s both;
 }
 
 .projectCard {
@@ -347,7 +374,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   gap: 50px;
 }
@@ -364,14 +391,13 @@
   transform: translateY(-50px);
 }
 
-.displayItemContainerEven {
+/* .displayItemContainerEven {
   margin-left: 20vw;
 }
 
 .displayItemContainerOdd {
   margin-left: -20vw;
-}
-
+} */
 
 .displayItemImage {
   width: 100%;
@@ -394,16 +420,20 @@
   justify-content: flex-start;
 }
 
-.fadeOutUpClass {
-  opacity: 0;
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  transform: translateY(-50px);
+.fadeInLeftClass {
+  animation: fadeInLeft 0.5s ease-out both;
 }
 
-.fadeInUpClass {
-  opacity: 1;
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  transform: translateY(0px);
+.fadeOutLeftClass {
+  animation: fadeOutLeft 0.5s ease-out both;
+}
+
+.fadeInRightClass {
+  animation: fadeInRight 0.5s ease-out both;
+}
+
+.fadeOutRightClass {
+  animation: fadeOutRight 0.5s ease-out both;
 }
 
 .contactContainer {
@@ -423,6 +453,22 @@
   }
   .globeMaskLeft, .globeMaskRight {
     width: 15vw;
+  }
+}
+
+@media (max-width: 1000px) {
+
+  /* .displayItemContainerEven {
+    margin-left: 0;
+  }
+  
+  .displayItemContainerOdd {
+    margin-left: 0;
+  }  */
+
+  .displayItemContainer {
+    width: 66vw;
+    height: 37.125vw;
   }
 }
 
@@ -467,7 +513,7 @@
 
 .guideTop {
   position: fixed;
-  top: 739.166px;
+
   left: 0;
   width: 100vw;
   height: 1px;
@@ -477,7 +523,7 @@
 
 .guideBottom {
   position: fixed;
-  top: 147.8333px;
+
   left: 0;
   width: 100vw;
   height: 1px;
