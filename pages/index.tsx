@@ -44,8 +44,8 @@ const Home: NextPage<IPageProps> = ({}) => {
 
   useEffect(() => {
     const updateThresholds = () => {
-      const bottom = window.innerHeight / 1.1;
-      const top = window.innerHeight - (window.innerHeight / 1.1);
+      const bottom = window.innerHeight / 1.25;
+      const top = window.innerHeight - (window.innerHeight / 1.25);
 
       setTopThreshold(top);
       setBottomThreshold(bottom);
@@ -76,7 +76,7 @@ const Home: NextPage<IPageProps> = ({}) => {
           let debugState = {fadeIn: 0, fadeOut: 0}
 
           // Fade out
-          if (cardRect.top <= topThresholdRef.current || cardRect.top >= bottomThresholdRef.current) {
+          if (cardRect.bottom <= topThresholdRef.current || cardRect.top >= bottomThresholdRef.current) {
             if (index % 2 === 0) {
               cardElement.classList.add(styles.fadeOutLeftClass);
               cardElement.classList.remove(styles.fadeInLeftClass);
