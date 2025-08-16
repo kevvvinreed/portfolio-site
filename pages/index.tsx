@@ -273,7 +273,7 @@ const Home: NextPage<IPageProps> = ({}) => {
                 <div 
                   id={'portfolio-card-' + index}
                   key={card.title} 
-                  className={`${styles.displayItemContainer} ${(index + 1) % 2 === 0 ? styles.displayItemContainerEven : styles.displayItemContainerOdd}`}
+                  className={`${styles.displayItemContainer} ${(index + 1) % 2 === 0 ? styles.displayItemContainerEven : styles.displayItemContainerOdd} ${(index + 1) % 2 === 0 ? styles.fadeOutRightClass : styles.fadeOutLeftClass}`}
                   onClick={() => {
                     if (card.link) {
                       window.open(card.link, '_blank');
