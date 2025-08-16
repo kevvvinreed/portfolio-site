@@ -275,7 +275,9 @@ const Home: NextPage<IPageProps> = ({}) => {
                   key={card.title} 
                   className={`${styles.displayItemContainer} ${(index + 1) % 2 === 0 ? styles.displayItemContainerEven : styles.displayItemContainerOdd}`}
                   onClick={() => {
-                    window.open(card.link, '_blank');
+                    if (card.link) {
+                      window.open(card.link, '_blank');
+                    }
                   }}
                 >
                   <div className={styles.displayItemHeader}>

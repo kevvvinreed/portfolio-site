@@ -368,6 +368,7 @@
 
 /* Begin Section 2 */
 .portfolioContainer {
+  padding-top: 100px;
   width: 100vw;
   height: 100vh;
   background: var(--primary);
@@ -389,6 +390,14 @@
   opacity: 0;
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   transform: translateY(-50px);
+}
+
+.displayItemContainer:hover {
+  border: 1px solid var(--tertiary);
+}
+
+.displayItemContainer:hover .displayItemHeader h3 {
+  text-shadow: 0 0 5px var(--tertiary);
 }
 
 /* .displayItemContainerEven {
